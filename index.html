@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Speech Acts Quiz</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #8e2de2, #4a00e0);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #fff;
+      color: #333;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    }
+    .question {
+      display: none;
+    }
+    .question.active {
+      display: block;
+    }
+    h2 {
+      color: #4a00e0;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      background: #4a00e0;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #8e2de2;
+    }
+    .summary {
+      display: none;
+    }
+    .answer {
+      margin-top: 10px;
+      background: #f0f0f0;
+      padding: 10px;
+      border-left: 4px solid #4a00e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="quiz"></div>
+    <div class="buttons">
+      <button onclick="previousQuestion()">Previous</button>
+      <button onclick="nextQuestion()">Next</button>
+      <button onclick="startOver()">Start Over</button>
+    </div>
+  </div>
+<script>
+const quizData = [
+  {
+    "q": "What is the illocutionary force of the following utterance?\n\u201cI\u2019m happy to help if you\u2019d like.\u201d",
+    "options": [
+      "Apologizing",
+      "Offering",
+      "Promising",
+      "Thanking"
+    ],
+    "answer": "Offering",
+    "explanation": "The utterance expresses the speaker's willingness to assist the hearer. Although framed as a statement, its function is to make an offer. The speaker is not merely stating a fact about their emotional state but indirectly proposing assistance\u2014thus performing an offer, a type of commissive speech act."
+  },
+  {
+    "q": "Which of the following is a declaration?",
+    "options": [
+      "I\u2019ll resign next week.",
+      "I hereby declare the meeting open.",
+      "Can you attend the meeting?",
+      "It\u2019s getting late."
+    ],
+    "answer": "I hereby declare the meeting open.",
+    "explanation": "Declarations are speech acts that change the social reality simply by being uttered under appropriate circumstances. 'I hereby declare the meeting open' is a formal declaration that enacts the opening of the meeting, not just a statement about it. The performative verb 'declare' makes this act valid in the right context (e.g., by a chairperson)."
+  },
+  {
+    "q": "Which utterance is a performative speech act?",
+    "options": [
+      "I was wrong.",
+      "I promise to do better.",
+      "He said I was wrong.",
+      "You were right after all."
+    ],
+    "answer": "I promise to do better.",
+    "explanation": "Performative speech acts explicitly name the action being performed through the utterance. In 'I promise to do better', the speaker performs the act of promising by saying so. The verb 'promise' is a performative verb and must be spoken by someone in the right context and authority to be valid."
+  },
+  {
+    "q": "What type of speech act is represented in the following utterance?\n\u201cShe always brings the best wine.\u201d\n(Said at a dinner party when someone arrives empty-handed)",
+    "options": [
+      "Representative",
+      "Directive",
+      "Commissive",
+      "Expressive"
+    ],
+    "answer": "Directive",
+    "explanation": "Although the utterance appears to be a representative statement, in the context of a guest arriving empty-handed, the speaker is indirectly suggesting or hinting that bringing wine is expected. This is a classic example of an indirect directive\u2014a polite and face-saving way of requesting future behavior by using implication rather than direct command."
+  },
+  {
+    "q": "Which of the following best describes a pseudo-directive?",
+    "options": [
+      "Could you lend me your pen?",
+      "Pass the salt.",
+      "Don\u2019t worry about it!",
+      "I need you to sign this."
+    ],
+    "answer": "Don\u2019t worry about it!",
+    "explanation": "Pseudo-directives appear to be imperatives but function as something else. 'Don\u2019t worry about it!' looks like a command, but it's actually a conventional way of expressing reassurance or humility in response to thanks. It doesn\u2019t direct the hearer to perform an action in the literal sense."
+  },
+  {
+    "q": "Identify the locution, illocution, and perlocution of the utterance:\n\u201cI need to leave early today.\u201d",
+    "options": [],
+    "answer": "Locution: a statement of need. Illocution: request. Perlocution: the hearer might allow or adjust schedule.",
+    "explanation": "The locution is a factual statement about needing to leave. The illocution, however, is a polite way of requesting permission. The perlocution refers to the effect on the hearer\u2014such as granting the request or rescheduling a meeting. This demonstrates how speech acts have multiple layers beyond literal meaning."
+  },
+  {
+    "q": "Consider the utterance: \u201cShouldn\u2019t we tidy up before the guests arrive?\u201d\na) Is this a direct or indirect speech act?\nb) What is the likely illocutionary force?",
+    "options": [],
+    "answer": "a) Indirect speech act\nb) Illocutionary act: suggesting/requesting.",
+    "explanation": "This is an interrogative form that indirectly performs a directive speech act. It does not literally ask for an answer about tidiness, but rather urges action while maintaining politeness. The speaker uses a question to prompt a cooperative response, avoiding imposition."
+  },
+  {
+    "q": "Provide your own example of an utterance that looks like a directive but is actually performing a different kind of speech act (i.e., a pseudo-directive). Identify the speech act and explain.",
+    "options": [],
+    "answer": "Example: \u201cDon\u2019t be a stranger!\u201d\nSpeech act: Expressive \u2014 shows goodwill, not a command.",
+    "explanation": "The utterance 'Don\u2019t be a stranger!' has the form of an imperative but expresses a sentiment rather than a directive. It is meant to show friendliness or hope for future interaction, not to literally command the hearer. It performs an expressive function by conveying the speaker\u2019s positive attitude."
+  }
+];
+
+let currentQuestion = 0;
+
+function renderQuiz() {
+  const container = document.getElementById('quiz');
+  container.innerHTML = '';
+
+  if (currentQuestion < quizData.length) {
+    const q = quizData[currentQuestion];
+    let html = `<div class="question active">
+      <h2>${currentQuestion + 1}. ${q.q.replace(/\n/g, '<br>')}</h2>`;
+
+    if (q.options.length > 0) {
+      q.options.forEach(opt => {
+        html += `<div><input type="radio" name="q${currentQuestion}" /> ${opt}</div>`;
+      });
+    } else {
+      html += `<textarea rows="4" style="width:100%"></textarea>`;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+  } else {
+    renderSummary();
+  }
+}
+
+function renderSummary() {
+  const container = document.getElementById('quiz');
+  let html = '<h2>Summary</h2>';
+  quizData.forEach((q, i) => {
+    html += `<div class="answer"><strong>${i + 1}. ${q.q.replace(/\n/g, '<br>')}</strong><br><em>Answer:</em> ${q.answer.replace(/\n/g, '<br>')}<br><em>Explanation:</em> ${q.explanation}</div>`;
+  });
+  container.innerHTML = html;
+}
+
+function nextQuestion() {
+  if (currentQuestion < quizData.length) {
+    currentQuestion++;
+    renderQuiz();
+  }
+}
+
+function previousQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    renderQuiz();
+  }
+}
+
+function startOver() {
+  currentQuestion = 0;
+  renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
